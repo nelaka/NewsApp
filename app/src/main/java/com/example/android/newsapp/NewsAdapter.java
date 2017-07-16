@@ -58,6 +58,14 @@ public class NewsAdapter extends ArrayAdapter<Result> {
         holder.publicationDateTextView.setText(formattedDate);
         holder.publicationDateTextView.setVisibility(View.VISIBLE);
 
+        // Find the TextView with view ID section_name
+        if (currentArticle.getSectionName().isEmpty())
+            holder.sectionNameTextView.setVisibility(View.GONE);
+        else {
+            holder.sectionNameTextView.setText(currentArticle.getSectionName());
+            holder.sectionNameTextView.setVisibility(View.VISIBLE);
+        }
+
         // Find the TextView with view ID title and hide it, if it is empty
         if (currentArticle.getTitle().isEmpty()) holder.titleTextView.setVisibility(View.GONE);
         else {
@@ -67,8 +75,11 @@ public class NewsAdapter extends ArrayAdapter<Result> {
 
         // Find the TextView with view ID author. It can't be hided as next to this view is
         // publication date view and we don't want to be in the same line with title
-        holder.authorsTextView.setText(currentArticle.getAuthors());
-        holder.authorsTextView.setVisibility(View.VISIBLE);
+        if (currentArticle.getAuthors().isEmpty()) holder.authorsTextView.setVisibility(View.GONE);
+        else {
+            holder.authorsTextView.setText(currentArticle.getAuthors());
+            holder.authorsTextView.setVisibility(View.VISIBLE);
+        }
 
         return listItemView;
     }
@@ -80,6 +91,7 @@ public class NewsAdapter extends ArrayAdapter<Result> {
         String year = stringDate.substring(0, 4);
         String month = stringDate.substring(5, 7);
         month = new DateFormatSymbols().getMonths()[Integer.parseInt(month) - 1];
+        month = month.substring(0, 3);
         String day = stringDate.substring(8, 10);
         String newString = month + " " + day + ", " + year;
         return newString;
@@ -88,6 +100,8 @@ public class NewsAdapter extends ArrayAdapter<Result> {
     static class ViewHolder {
         @BindView(R.id.publication_date)
         TextView publicationDateTextView;
+        @BindView(R.id.section_name)
+        TextView sectionNameTextView;
         @BindView(R.id.title)
         TextView titleTextView;
         @BindView(R.id.authors)

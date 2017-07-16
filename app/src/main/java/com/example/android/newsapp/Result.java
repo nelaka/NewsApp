@@ -24,6 +24,10 @@ public class Result {
         return mPublicationDate;
     }
 
+    public String getSectionName() {
+        return mSectionName;
+    }
+
     public String getTitle() {
         return mTitle;
     }

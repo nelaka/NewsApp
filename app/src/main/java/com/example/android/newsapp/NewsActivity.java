@@ -152,7 +152,7 @@ public class NewsActivity extends AppCompatActivity implements LoaderManager.Loa
         progDailog.dismiss();
         // If there is a valid list of {@link Result}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
-        if (!news.isEmpty()) {
+        if (news != null && !news.isEmpty()) {
             mAdapter.addAll(news);
         }
     }
