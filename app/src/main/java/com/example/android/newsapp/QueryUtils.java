@@ -58,7 +58,7 @@ public final class QueryUtils {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 
-        // Extract relevant fields from the JSON response and create a list of {@link Book}s
+        // Extract relevant fields from the JSON response and create a list of {@link Result}s
         List<Result> news = extractFeatureFromJson(jsonResponse);
 
         // Return the list of {@link Result}s
@@ -107,7 +107,7 @@ public final class QueryUtils {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the book JSON results.", e);
+            Log.e(LOG_TAG, "Problem retrieving the news JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -150,7 +150,7 @@ public final class QueryUtils {
             return null;
         }
 
-        // Create an empty ArrayList that we can start adding books to
+        // Create an empty ArrayList that we can start adding results to
         List<Result> news = new ArrayList<>();
 
         // Try to parse the JSON response string. If there's a problem with the way the JSON
@@ -166,18 +166,14 @@ public final class QueryUtils {
                 JSONObject response = baseJsonResponse.getJSONObject("response");
 
                 // Extract tje JSONArray associated with the key called "results",
-                //which represents the list o news
+                // which represents the list o news
                 JSONArray resultArray = response.getJSONArray("results");
 
-                // For each book in the resultArray, create an {@link Result} object
+                // For each result in the resultArray, create an {@link Result} object
                 for (int i = 0; i < resultArray.length(); i++) {
 
                     // Get a single book at position i within the list of news
                     JSONObject currentResult = resultArray.getJSONObject(i);
-
-
-                    // Extract the value for the key called "type"
-                    String type = currentResult.getString("type");
 
                     String sectionName = null;
                     if (currentResult.has("sectionName")) {
@@ -197,17 +193,33 @@ public final class QueryUtils {
                         title = currentResult.getString("webTitle");
                     }
 
-
                     String url = null;
                     if (currentResult.has("webUrl")) {
                         // Extract the value for the key called "webUrl"
                         url = currentResult.getString("webUrl");
                     }
 
+                    JSONObject tag;
+                    StringBuilder authors = new StringBuilder();
+                    if (currentResult.has("tags")) {
+                        JSONArray authorsArray = currentResult.getJSONArray("tags");
+                        if (authorsArray.length() > 0) {
+                            // For each author in the authorArray, append its value to authors StringBuilder
+                            for (int j = 0; j < authorsArray.length(); j++) {
+                                tag = authorsArray.getJSONObject(j);
+                                if (tag.has("webTitle")) {
+                                    authors.append(tag.getString("webTitle")).append(", ");
+                                }
+                                //remove comma from the end of the string
+                                authors.setLength(authors.length() - 2);
+                            }
+                        }
+                    }
+
                     /** Create a new {@link Result} object with the type, section name, publication date,
-                     *  with the tuitle and the url from the JSON response.
+                     *  with the title and the url from the JSON response.
                      * */
-                    Result result = new Result(type, sectionName, publicationDate, title, url);
+                    Result result = new Result(sectionName, publicationDate, title, authors.toString(), url);
 
                     // Add the new {@link Result} to the list of news
                     news.add(result);
@@ -218,7 +230,7 @@ public final class QueryUtils {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
-            Log.e("QueryUtils", "Problem parsing the book JSON results", e);
+            Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
 
         // Return the list of books

@@ -1,33 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/padding">
+    android:paddingBottom="@dimen/padding"
+    android:paddingLeft="@dimen/padding_small"
+    android:paddingRight="@dimen/padding_small"
+    android:paddingTop="@dimen/padding_small">
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="title"
         android:layout_alignParentTop="true"
-        android:textStyle="bold" />
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_normal"
+        android:textStyle="bold"
+        tools:text="title" />
+
+    <TextView
+        android:id="@+id/authors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:textSize="@dimen/text_size_normal"
+        android:textStyle="italic"
+        tools:text="authors" />
+
     <TextView
         android:id="@+id/publication_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:text="publication_date"
-        android:textStyle="italic" />
-
-    <TextView
-        android:id="@+id/section_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="section name"
-        android:layout_alignBaseline="@id/publication_date"
+        android:layout_alignBaseline="@id/authors"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:textAllCaps="true"
-        android:textSize="12sp"/>
-
+        android:textSize="@dimen/text_size_small"
+        tools:text="section name" />
 </RelativeLayout>
